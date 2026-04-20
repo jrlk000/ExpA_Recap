@@ -25,17 +25,18 @@ phy = 0
 
 v_abs_hunter = 2 #[m/s²]
 
-#initial polar coords velocity components of target
-dr_dt_target = 1 #[m/s]
-d_phy_dt_target = 0 #[rad/s]
+#initial velocities
+dr_dt_target = 1 #[m/s] translation
+d_phy_dt_target = 0 #[rad/s] rotation
 
-#position vectors of target and chaser
+#initial positions
 r0_target = np.array([0, 0], dtype=float) #[m]
 r0_hunter = np.array([0, 10], dtype=float) #[m]
 
 v0_target = dr_dt_target * np.array([math.cos(phy), math.sin(phy)]) + d_phy_dt_target * np.array([-math.sin(phy), math.cos(phy)], dtype=float)
 v0_hunter = v_abs_hunter * (r0_target-r0_hunter)/np.linalg.norm(r0_target-r0_hunter)
 
+#store initial distance
 distances = [np.linalg.norm(r0_target-r0_hunter)]
 
 #positions
@@ -75,7 +76,7 @@ while not math.isclose(distances[-1], 0, abs_tol=1e-1):
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(10, 8))
 
 # x over hunter
-"""pos_hunter = np.array(hunter_positions, dtype=float)
+pos_hunter = np.array(hunter_positions, dtype=float)
 x_pos_hunter = pos_hunter[:, 0]
 y_pos_hunter = pos_hunter[:, 1]
 
@@ -86,8 +87,10 @@ ax1.set_ylabel("y [m]")
 ax1.plot(x_pos_hunter, y_pos_hunter, color="blue")
 ax1.legend(["hunter pos 2D."])
 
-pos_ax1 = ax1.get_position()
-ax1.set_position([0, 0, pos_ax1.width, pos_ax1.height])
+bbox_ax1 = ax1.get_position() #returns a bounding box
+#ax1.set_position([0, 0, pos_ax1.width, pos_ax1.height])
+logger.debug(f"x_val, y_val, width, height: {bbox_ax1.bounds}")
+
 
 #relative distance over t
 ax2.set_title("dist. over time.")
@@ -95,10 +98,12 @@ ax2.set_xlabel("time [s]")
 ax2.set_ylabel("dist [m]")
 
 ax2.plot(time_interval, distances, color="red")
-ax2.legend(["Dist."])"""
+ax2.legend(["Dist."])
+
+plt.show()
 
 #animation
-plot_curve_hunter, = ax3.plot([], [])
+"""plot_curve_hunter, = ax3.plot([], [])
 plot_hunter, = ax3.plot([], [], 'o', color='blue')
 plot_target, = ax3.plot([], [], 'o', color='red')
 
@@ -112,14 +117,14 @@ ax3.add_patch(pfeil_a)
 
 # ---- update the plot for animation ----
 def update(n: int):
-	"""
+	
 	Update the axis.
 
 	Args:
 
 	Returns:
 
-	"""
+	
 	pfeil_v.set_positions(hunter_positions[n], hunter_positions[n] + hunter_velocities[n])
 	pfeil_a.set_positions(hunter_positions[n], hunter_positions[n] + hunter_accelerations[n])
 
@@ -132,7 +137,7 @@ def update(n: int):
 ani = mpl.animation.FuncAnimation(fig, update, frames=len(time_interval), interval=30, blit=True)
 
 #acceleration over t
-plt.show()
+plt.show()"""
 
 """while not math.isclose(np.linalg.norm(r), 0, abs_tol=1e-1):
 	logger.debug("Entered loop.")
